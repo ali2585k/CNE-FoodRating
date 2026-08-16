@@ -73,11 +73,7 @@
       const BOARD_KEY = "vendors";
       const colours = ["lime","pink","blue","yellow","coral","teal"];
       const categories = ["Savory chaos","Sweet stuff","Big bites","Cool drinks","Classic fair","Hidden gem"];
-      const seedVendors = [
-        {id:"seed-pickle-pizza",name:"Pickle Pizza Co.",category:"Savory chaos",location:"Food Building · Row B",description:"A crispy dill-loaded slice that should not work nearly as well as it does.",listedBy:"Maya",photo:null,createdAt:"2026-08-15T18:10:00.000Z",reviews:[{id:"p1",reviewerName:"Maya",stars:5,comment:"Crispy, tangy, and somehow the dill-to-cheese ratio is perfect.",createdAt:"2026-08-15T18:11:00.000Z"},{id:"p2",reviewerName:"Dev",stars:4,comment:"A strange idea with excellent execution. I would absolutely get another slice.",createdAt:"2026-08-15T18:15:00.000Z"}]},
-        {id:"seed-cloud-nine",name:"Cloud Nine Churros",category:"Sweet stuff",location:"Midway · Near the Sky Ride",description:"Warm cinnamon churros tucked into a swirl of vanilla soft serve.",listedBy:"Dev",photo:null,createdAt:"2026-08-15T18:20:00.000Z",reviews:[{id:"c1",reviewerName:"Dev",stars:5,comment:"Warm churros, cold soft serve, zero regrets. Split one. Or don’t.",createdAt:"2026-08-15T18:21:00.000Z"},{id:"c2",reviewerName:"Noah",stars:4,comment:"Best eaten fast before the soft serve wins the battle.",createdAt:"2026-08-15T18:25:00.000Z"}]},
-        {id:"seed-bao-down",name:"Bao Down Express",category:"Big bites",location:"Food Building · East Hall",description:"Fluffy bao, sticky pork belly, crunchy pickles, and a two-napkin finish.",listedBy:"Noah",photo:null,createdAt:"2026-08-15T18:30:00.000Z",reviews:[{id:"b1",reviewerName:"Noah",stars:4,comment:"The pork belly bao is messy in exactly the right way.",createdAt:"2026-08-15T18:31:00.000Z"},{id:"b2",reviewerName:"Maya",stars:4,comment:"Soft bun, lots of crunch, and a sauce I would put on everything.",createdAt:"2026-08-15T18:35:00.000Z"}]}
-      ];
+      const seedVendors = [];
 
       const state = { vendors: [], filter: "All bites", search: "" };
       const grid = document.getElementById("vendor-grid");

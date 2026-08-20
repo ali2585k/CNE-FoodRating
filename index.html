@@ -6,6 +6,9 @@
   <meta name="theme-color" content="#18283d">
   <meta name="description" content="A friend-rated guide to the best food vendors at Toronto's CNE.">
   <title>CNE Bites Club — Rate the Midway</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js"></script>
+  <!-- Your two Supabase values live in config.js. You never need to edit this file. -->
+  <script src="config.js"></script>
   <style>
     :root{--ink:#18283d;--cream:#fff6df;--paper:#fffdf7;--tomato:#ef553f;--yellow:#ffc928;--teal:#0c8c89;--pink:#f4a7bd;--blue:#9edee4;--lime:#c8df67;--line:rgba(24,40,61,.2)}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit}button,a{-webkit-tap-highlight-color:transparent}button{color:inherit}.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -13,6 +16,7 @@
     .local-strip{padding:8px 20px;display:flex;justify-content:center;align-items:center;gap:8px;background:#fff0bd;border-bottom:2px solid var(--ink);font-size:11px;font-weight:800;text-align:center}.local-strip b{padding:3px 7px;background:var(--ink);color:white;letter-spacing:.08em}.hero{min-height:610px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr);border-bottom:2px solid var(--ink);background:var(--ink);overflow:hidden}.hero-copy{padding:clamp(55px,7vw,96px) clamp(25px,7vw,104px);color:var(--cream);position:relative}.hero-copy:after{content:"";width:180px;height:180px;position:absolute;right:20px;top:40px;opacity:.12;background:repeating-radial-gradient(circle,var(--cream) 0 2px,transparent 3px 10px);border-radius:50%;pointer-events:none}.eyebrow{margin:0 0 20px;font-size:12px;line-height:1.3;font-weight:900;letter-spacing:.16em}.eyebrow span{color:var(--yellow)}.eyebrow.dark{color:var(--tomato)}h1{margin:0;max-width:720px;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-size:clamp(70px,9vw,130px);font-weight:900;line-height:.78;letter-spacing:-.035em;text-transform:uppercase}h1 em{color:var(--yellow);font-style:normal;-webkit-text-stroke:1px var(--cream);text-shadow:5px 5px 0 var(--tomato)}.hero-text{max-width:610px;margin:34px 0 30px;font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:#e5dfce}.hero-actions{display:flex;align-items:center;gap:26px}.primary-button{padding:15px 22px}.primary-button span{margin-left:18px}.text-link{color:var(--cream);font-size:14px;font-weight:800;text-underline-offset:5px}.hero-poster{margin:42px 54px 42px 0;min-height:510px;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;border:3px solid var(--ink);outline:9px solid var(--tomato);outline-offset:-12px;background:var(--yellow);transform:rotate(2.5deg);box-shadow:16px 16px 0 rgba(0,0,0,.22);overflow:hidden}.hero-poster:before{content:"";position:absolute;inset:0;opacity:.16;background:radial-gradient(circle at 10px 10px,var(--ink) 1.8px,transparent 2px);background-size:13px 13px}.poster-kicker,.poster-title,.poster-ribbon{z-index:1;font-weight:950}.poster-kicker{letter-spacing:.26em}.poster-title{font-family:Impact,sans-serif;font-size:clamp(62px,7vw,96px);line-height:.82;text-align:center;color:var(--tomato);-webkit-text-stroke:2px var(--ink);text-shadow:5px 5px 0 var(--cream)}.poster-food{z-index:1;font-size:100px;filter:drop-shadow(7px 7px 0 rgba(24,40,61,.25));transform:rotate(-8deg)}.poster-ribbon{z-index:2;padding:10px 18px;color:var(--cream);background:var(--ink);transform:rotate(-3deg);font-size:13px;letter-spacing:.1em}.spark{position:absolute;color:var(--teal);font-size:48px}.spark-one{left:38px;top:86px}.spark-two{right:32px;bottom:74px}
     .ticker{min-height:58px;display:flex;align-items:center;justify-content:center;gap:clamp(22px,5vw,72px);padding:12px 22px;background:var(--teal);color:white;border-bottom:2px solid var(--ink);font-size:13px;font-weight:700;flex-wrap:wrap}.ticker b{color:var(--yellow)}.board{padding:74px clamp(20px,5vw,72px) 100px;background:var(--cream)}.section-heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:28px}.section-heading h2,.modal h2{margin:0;font-family:Impact,sans-serif;text-transform:uppercase;font-size:clamp(48px,6vw,78px);line-height:.9;letter-spacing:-.02em}.outline-button{padding:13px 18px;border:2px solid var(--ink);background:transparent;box-shadow:3px 3px 0 var(--ink);font-weight:900;cursor:pointer}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:18px 0 30px;border-top:2px solid var(--ink)}.search-box{min-width:280px;display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink);padding:9px 0}.search-box span{font-size:25px;transform:rotate(-15deg)}.search-box input{width:100%;border:0;outline:0;background:transparent}.filters{display:flex;gap:7px;flex-wrap:wrap}.filters button{padding:8px 13px;border:1.5px solid var(--ink);border-radius:99px;background:transparent;font-size:12px;font-weight:800;cursor:pointer}.filters button.active{background:var(--ink);color:white}.vendor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.vendor-card{border:2px solid var(--ink);background:var(--paper);box-shadow:6px 6px 0 var(--ink);overflow:hidden;transition:.2s ease}.vendor-card:hover{transform:translateY(-4px) rotate(-.2deg);box-shadow:9px 12px 0 var(--ink)}.card-image{height:230px;position:relative;display:grid;place-items:center;border-bottom:2px solid var(--ink);overflow:hidden}.card-image:before,.card-image:after{content:"";position:absolute;width:170px;height:170px;border:2px solid var(--ink);border-radius:50%;opacity:.3}.card-image:after{width:110px;height:110px}.card-image.lime{background:var(--lime)}.card-image.pink{background:var(--pink)}.card-image.blue{background:var(--blue)}.card-image.yellow{background:var(--yellow)}.card-image.coral{background:#f69b73}.card-image.teal{background:#8ed4c7}.vendor-photo{width:100%;height:100%;position:absolute;inset:0;z-index:1;object-fit:cover}.food-emoji{z-index:1;font-size:100px;filter:drop-shadow(6px 7px 0 rgba(24,40,61,.22))}.card-number,.photo-note{position:absolute;z-index:2;font-weight:950;font-size:11px;letter-spacing:.1em}.card-number{top:14px;left:15px;width:34px;height:34px;display:grid;place-items:center;border:2px solid var(--ink);border-radius:50%;background:var(--cream)}.photo-note{bottom:10px;right:11px;padding:5px 8px;color:white;background:var(--ink);transform:rotate(-2deg)}.card-body{padding:20px}.card-meta{display:flex;justify-content:space-between;gap:8px;color:var(--tomato);font-size:10px;font-weight:950;letter-spacing:.07em;text-transform:uppercase}.card-meta span:last-child{color:#66717d;text-align:right}.card-body h3{margin:13px 0 4px;font-size:25px;line-height:1;letter-spacing:-.04em}.location{margin:0 0 18px;color:#68717b;font-size:12px}.vendor-description{min-height:40px;margin:0 0 14px;color:#3f4b57;font-size:13px;line-height:1.5}.rating-row{padding:14px 0;display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.rating-row>strong{font-family:Impact,sans-serif;font-size:42px;line-height:1}.rating-row>div{display:flex;flex-direction:column;gap:2px}.stars{letter-spacing:1px;white-space:nowrap}.star-on{color:#f0a900;-webkit-text-stroke:.7px var(--ink)}.star-off{color:#d5d0c4}.rating-row small{color:#6f777d;font-size:11px}blockquote{min-height:50px;margin:16px 0;color:#444e58;font-family:Georgia,serif;font-size:14px;line-height:1.45;font-style:italic}.review-credit{margin:-11px 0 16px;color:#7a838a;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.rate-button{width:100%;padding:12px 0 5px;display:flex;justify-content:space-between;border:0;border-top:2px solid var(--ink);background:transparent;font-weight:950;cursor:pointer}.rate-button span:last-child{color:var(--tomato);font-size:10px;letter-spacing:.05em;text-transform:uppercase}.empty-state{grid-column:1/-1;padding:70px 20px;text-align:center;border:2px dashed var(--ink)}.empty-state>span{font-size:52px}.empty-state h3{margin:12px 0 4px;font-size:25px}.empty-state p{margin:0 0 22px;color:#68717b}
     dialog{width:min(650px,calc(100% - 34px));max-height:min(90vh,900px);padding:0;border:0;background:transparent;color:var(--ink);overflow:visible}dialog::backdrop{background:rgba(24,40,61,.72);backdrop-filter:blur(5px)}.modal{position:relative;padding:34px;border:3px solid var(--ink);background:var(--cream);box-shadow:10px 10px 0 var(--yellow);max-height:min(90vh,900px);overflow:auto}.modal-close{position:absolute;right:15px;top:10px;border:0;background:transparent;font-size:34px;cursor:pointer}.modal>p:not(.eyebrow){color:#5a6470;line-height:1.5}.modal label{display:grid;gap:6px;margin:16px 0;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}.modal input,.modal select,.modal textarea{width:100%;padding:13px;border:2px solid var(--ink);background:white;outline:none;border-radius:0}.modal input:focus,.modal select:focus,.modal textarea:focus{box-shadow:3px 3px 0 var(--yellow)}.modal textarea{min-height:82px;resize:vertical;line-height:1.4}.form-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:14px}.upload-control{min-height:100px;display:flex!important;align-items:center;gap:15px!important;padding:12px;border:2px dashed var(--ink);background:rgba(255,255,255,.55);cursor:pointer}.upload-control img{width:92px;height:72px;object-fit:cover;border:2px solid var(--ink)}.upload-control>span:not(.upload-icon){display:grid;gap:4px}.upload-icon{display:grid;place-items:center;width:72px;height:62px;background:var(--yellow);border:2px solid var(--ink);font-size:30px}.upload-control small{color:#727a82;font-weight:500;letter-spacing:0;text-transform:none}.upload-control input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.divider-label{display:flex;align-items:center;gap:12px;margin:24px 0 2px;color:var(--tomato);font-size:10px;font-weight:950;letter-spacing:.12em}.divider-label:before,.divider-label:after{content:"";height:1px;flex:1;background:var(--line)}.star-picker{min-height:46px;display:flex;align-items:center;gap:2px}.star-picker button{padding:0 1px;border:0;background:transparent;color:#d4cec0;font-size:31px;line-height:1;cursor:pointer;-webkit-text-stroke:1px var(--ink)}.star-picker button.picked{color:var(--yellow)}.star-picker b{margin-left:8px;font-size:12px}.primary-button:disabled{opacity:.6;cursor:wait}.full{width:100%}.rating-summary{display:flex;align-items:center;gap:14px;margin:18px 0;padding:14px;border:2px solid var(--ink);background:white}.rating-summary>strong{font-family:Impact,sans-serif;font-size:48px}.rating-summary>span{display:grid;gap:3px}.rating-summary small{color:#717981}.crew-notes{margin-top:24px}.crew-notes article{padding:12px 0;border-bottom:1px solid var(--line)}.crew-notes article>div{display:flex;align-items:center;justify-content:space-between;gap:12px}.crew-notes article p{margin:7px 0 0;font-family:Georgia,serif;font-size:13px;line-height:1.4;font-style:italic}.stars-small{font-size:11px}.modal-note{padding:10px 12px;background:#fff0bd;border:1px solid var(--ink);font-size:11px;line-height:1.5}.data-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}.data-actions button{padding:12px;border:2px solid var(--ink);background:white;font-weight:900;cursor:pointer}
+    .local-strip.bad{background:#ffd9d2}.local-strip.bad b{background:var(--tomato)}.local-strip.good b{background:var(--teal)}
     .toast{position:fixed;right:24px;bottom:24px;z-index:40;max-width:360px;padding:15px 19px;border:2px solid var(--ink);background:var(--yellow);box-shadow:5px 5px 0 var(--ink);font-size:13px;font-weight:900}.toast[hidden]{display:none}footer{min-height:110px;padding:28px clamp(20px,5vw,72px);display:flex;align-items:center;justify-content:space-between;gap:24px;background:var(--ink);color:var(--cream)}footer .brand{color:var(--cream)}footer p{color:#bfc5c7;font-size:13px}footer a{color:var(--yellow);font-size:12px;font-weight:900;text-underline-offset:4px}
     @media(max-width:980px){.hero{grid-template-columns:1fr}.hero-poster{min-height:380px;margin:0 36px 55px}.vendor-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:760px){.topbar{align-items:flex-start;flex-direction:column}.topbar nav{width:100%;justify-content:flex-start}.nav-link{padding-left:0}.hero-copy{padding:55px 22px 48px}.hero-actions{align-items:flex-start;flex-direction:column;gap:18px}.hero-poster{min-height:330px;margin:0 22px 42px}.poster-food{font-size:75px}.ticker{justify-content:flex-start;gap:15px 28px}.section-heading{align-items:flex-start;flex-direction:column;gap:22px}.section-heading .outline-button{width:100%}.toolbar{align-items:stretch;flex-direction:column}.search-box{min-width:0}.vendor-grid{grid-template-columns:1fr}.card-image{height:210px}.modal{padding:28px 20px}.form-grid{grid-template-columns:1fr;gap:0}.toast{left:18px;right:18px;bottom:18px}.rate-button span:last-child{max-width:130px;text-align:right}footer{align-items:flex-start;flex-direction:column}.data-actions{grid-template-columns:1fr}}
@@ -29,7 +33,7 @@
       <button class="nav-cta" id="top-add-button" type="button">+ List a vendor</button>
     </nav>
   </header>
-  <div class="local-strip"><b>GITHUB EDITION</b><span>Listings and photos are saved in this browser. Export the board to move it to another device.</span></div>
+  <div class="local-strip" id="status-strip"><b id="status-tag">CONNECTING</b><span id="status-text">Loading the shared board…</span></div>
 
   <main>
     <section class="hero" id="top">
@@ -68,12 +72,27 @@
     (() => {
       "use strict";
 
-      const DB_NAME = "cne-bites-github";
-      const STORE_NAME = "board";
-      const BOARD_KEY = "vendors";
+      /* ============================================================
+         NOTHING IN THIS FILE NEEDS EDITING.
+
+         Your two Supabase values live in config.js, next to this
+         file in the same folder. That is the only file you touch.
+         ============================================================ */
+      const SUPABASE_URL = String(window.SUPABASE_URL || "");
+      const SUPABASE_KEY = String(window.SUPABASE_KEY || "");
+      const configFileLoaded = typeof window.SUPABASE_URL === "string";
+
+      const PHOTO_BUCKET = "vendor-photos";
       const colours = ["lime","pink","blue","yellow","coral","teal"];
       const categories = ["Savory chaos","Sweet stuff","Big bites","Cool drinks","Classic fair","Hidden gem"];
-      const seedVendors = [];
+
+      const libraryLoaded = typeof supabase !== "undefined" && typeof supabase.createClient === "function";
+      const urlLooksRight = /^https:\/\/[a-z0-9-]+\.supabase\.(co|in)\/?$/i.test(SUPABASE_URL.trim());
+      // Accepts either key format: new sb_publishable_... or legacy anon JWT eyJ...
+      const keyLooksRight = /^(sb_publishable_[A-Za-z0-9_-]{10,}|eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)$/.test(SUPABASE_KEY.trim());
+      const usingSecretKey = /^(sb_secret_|sbp_)/.test(SUPABASE_KEY.trim());
+      const configured = libraryLoaded && urlLooksRight && keyLooksRight && !usingSecretKey;
+      const db = configured ? supabase.createClient(SUPABASE_URL.trim().replace(/\/$/,""), SUPABASE_KEY.trim()) : null;
 
       const state = { vendors: [], filter: "All bites", search: "" };
       const grid = document.getElementById("vendor-grid");
@@ -93,50 +112,72 @@
       }
 
       function safePhoto(value) {
-        return typeof value === "string" && /^data:image\/(jpeg|png|webp);base64,/i.test(value) ? value : null;
+        if (typeof value !== "string") return null;
+        if (/^data:image\/(jpeg|png|webp);base64,/i.test(value)) return value;          // older local photos
+        if (configured && value.startsWith(`${SUPABASE_URL.trim().replace(/\/$/,"")}/storage/`)) return value;
+        return null;
       }
 
-      function cloneSeed() {
-        return JSON.parse(JSON.stringify(seedVendors));
+      function setStatus(tone, tag, text) {
+        const strip = document.getElementById("status-strip");
+        strip.className = `local-strip ${tone}`;
+        document.getElementById("status-tag").textContent = tag;
+        document.getElementById("status-text").textContent = text;
       }
 
-      function openDatabase() {
-        return new Promise((resolve, reject) => {
-          const request = indexedDB.open(DB_NAME, 1);
-          request.onupgradeneeded = () => {
-            if (!request.result.objectStoreNames.contains(STORE_NAME)) request.result.createObjectStore(STORE_NAME);
-          };
-          request.onsuccess = () => resolve(request.result);
-          request.onerror = () => reject(request.error);
+      /* ---------- talking to Supabase ---------- */
+
+      // Turn a database row into the shape the rest of the page already expects.
+      function rowToVendor(row) {
+        return {
+          id: row.id,
+          name: row.name,
+          category: row.category || "Midway find",
+          location: row.location || "",
+          description: row.description || "",
+          listedBy: row.listed_by || "Friend",
+          photo: safePhoto(row.photo_url),
+          createdAt: row.created_at,
+          reviews: (row.reviews || [])
+            .map(review => ({
+              id: review.id,
+              reviewerName: review.reviewer_name || "Friend",
+              stars: Number(review.stars) || 1,
+              comment: review.comment || "",
+              createdAt: review.created_at
+            }))
+            .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+        };
+      }
+
+      async function loadBoard() {
+        const { data, error } = await db
+          .from("vendors")
+          .select("id,name,category,location,description,listed_by,photo_url,created_at,reviews(id,reviewer_name,stars,comment,created_at)")
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        state.vendors = (data || []).map(rowToVendor);
+      }
+
+      async function refresh() {
+        try {
+          await loadBoard();
+          renderBoard();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      // Upload one photo to the shared bucket and hand back its public URL.
+      async function uploadPhoto(blob) {
+        if (!blob) return null;
+        const path = `${new Date().toISOString().slice(0,10)}/${uid()}.jpg`;
+        const { error } = await db.storage.from(PHOTO_BUCKET).upload(path, blob, {
+          contentType: "image/jpeg",
+          cacheControl: "31536000"
         });
-      }
-
-      async function readBoard() {
-        try {
-          const db = await openDatabase();
-          return await new Promise((resolve, reject) => {
-            const transaction = db.transaction(STORE_NAME, "readonly");
-            const request = transaction.objectStore(STORE_NAME).get(BOARD_KEY);
-            request.onsuccess = () => resolve(request.result || null);
-            request.onerror = () => reject(request.error);
-          });
-        } catch {
-          try { return JSON.parse(localStorage.getItem("cne-bites-board") || "null"); } catch { return null; }
-        }
-      }
-
-      async function writeBoard() {
-        try {
-          const db = await openDatabase();
-          await new Promise((resolve, reject) => {
-            const transaction = db.transaction(STORE_NAME, "readwrite");
-            transaction.objectStore(STORE_NAME).put(state.vendors, BOARD_KEY);
-            transaction.oncomplete = resolve;
-            transaction.onerror = () => reject(transaction.error);
-          });
-        } catch {
-          localStorage.setItem("cne-bites-board", JSON.stringify(state.vendors));
-        }
+        if (error) throw new Error(`The photo could not be uploaded: ${error.message}`);
+        return db.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl;
       }
 
       function average(vendor) {
@@ -267,7 +308,14 @@
         context.fillStyle = "#fffdf7";
         context.fillRect(0,0,canvas.width,canvas.height);
         context.drawImage(image,0,0,canvas.width,canvas.height);
-        return canvas.toDataURL("image/jpeg",.82);
+        // Hand back a real JPEG file (not a base64 string) so it can be uploaded to storage.
+        return await new Promise((resolve, reject) => {
+          canvas.toBlob(
+            blob => blob ? resolve(blob) : reject(new Error("That photo could not be processed.")),
+            "image/jpeg",
+            .82
+          );
+        });
       }
 
       function openAddDialog() {
@@ -302,13 +350,31 @@
           try {
             const data = new FormData(form);
             const listedBy = String(data.get("listedBy") || "").trim();
-            const photo = await fileToPhoto(photoInput.files[0]);
-            state.vendors.unshift({
-              id:uid(),name:String(data.get("name") || "").trim(),category:String(data.get("category") || "Midway find"),location:String(data.get("location") || "").trim(),description:String(data.get("description") || "").trim(),listedBy,photo,createdAt:new Date().toISOString(),reviews:[{id:uid(),reviewerName:listedBy,stars:Number(data.get("stars")),comment:String(data.get("comment") || "").trim(),createdAt:new Date().toISOString()}]
+
+            submit.textContent = photoInput.files[0] ? "Uploading photo…" : "Adding to the board…";
+            const photoUrl = await uploadPhoto(await fileToPhoto(photoInput.files[0]));
+
+            submit.textContent = "Adding to the board…";
+            const { data: inserted, error: vendorError } = await db.from("vendors").insert({
+              name: String(data.get("name") || "").trim(),
+              category: String(data.get("category") || "Midway find"),
+              location: String(data.get("location") || "").trim(),
+              description: String(data.get("description") || "").trim(),
+              listed_by: listedBy,
+              photo_url: photoUrl
+            }).select("id").single();
+            if (vendorError) throw new Error(vendorError.message);
+
+            const { error: reviewError } = await db.from("reviews").insert({
+              vendor_id: inserted.id,
+              reviewer_name: listedBy,
+              stars: Number(data.get("stars")),
+              comment: String(data.get("comment") || "").trim()
             });
+            if (reviewError) throw new Error(reviewError.message);
+
             localStorage.setItem("cne-bites-name",listedBy);
-            await writeBoard();
-            renderBoard(); closeDialog(); showToast("Vendor added — let the debate begin! 🎉");
+            await refresh(); closeDialog(); showToast("Vendor added — everyone can see it now! 🎉");
           } catch (error) {
             alert(error.message || "The vendor could not be saved.");
           } finally {
@@ -332,11 +398,24 @@
         const form = modalContent.querySelector("#rating-form");
         form.addEventListener("submit", async event => {
           event.preventDefault();
-          const data = new FormData(form);
-          const reviewerName = String(data.get("reviewerName") || "").trim();
-          vendor.reviews.unshift({id:uid(),reviewerName,stars:Number(data.get("stars")),comment:String(data.get("comment") || "").trim(),createdAt:new Date().toISOString()});
-          localStorage.setItem("cne-bites-name",reviewerName);
-          await writeBoard(); renderBoard(); closeDialog(); showToast("Rating added to the crew average ⭐");
+          const submit = form.querySelector("button[type=submit]");
+          submit.disabled = true; submit.textContent = "Sending your rating…";
+          try {
+            const data = new FormData(form);
+            const reviewerName = String(data.get("reviewerName") || "").trim();
+            const { error } = await db.from("reviews").insert({
+              vendor_id: vendor.id,
+              reviewer_name: reviewerName,
+              stars: Number(data.get("stars")),
+              comment: String(data.get("comment") || "").trim()
+            });
+            if (error) throw new Error(error.message);
+            localStorage.setItem("cne-bites-name",reviewerName);
+            await refresh(); closeDialog(); showToast("Rating added to the crew average ⭐");
+          } catch (error) {
+            alert(error.message || "That rating could not be saved.");
+            submit.disabled = false; submit.textContent = "Add my rating →";
+          }
         });
         dialog.showModal();
       }
@@ -362,13 +441,39 @@
         showToast("Board exported — send the JSON file to a friend.");
       }
 
+      // Import now ADDS to the shared board rather than replacing one browser's copy.
+      // Use it once to push an old exported board up to the cloud.
       async function importBoard(file) {
         if (!file) return;
         if (file.size > 30 * 1024 * 1024) throw new Error("That board file is too large to import.");
         const imported = sanitizeImportedBoard(JSON.parse(await file.text()));
-        if (!confirm(`Replace this browser's current board with ${imported.length} imported vendor listing${imported.length === 1 ? "" : "s"}?`)) return;
-        state.vendors = imported;
-        await writeBoard(); renderBoard(); showToast("Board imported successfully 🎪");
+        if (!confirm(`Add ${imported.length} vendor listing${imported.length === 1 ? "" : "s"} to the shared board? Everyone will see them.`)) return;
+
+        showToast(`Uploading ${imported.length} listing${imported.length === 1 ? "" : "s"}…`);
+        for (const vendor of imported) {
+          let photoUrl = null;
+          if (vendor.photo && vendor.photo.startsWith("data:")) {
+            try { photoUrl = await uploadPhoto(await (await fetch(vendor.photo)).blob()); }
+            catch (error) { console.warn("Skipped one photo:", error); }
+          } else if (vendor.photo) {
+            photoUrl = vendor.photo;
+          }
+          const { data: inserted, error } = await db.from("vendors").insert({
+            name: vendor.name, category: vendor.category, location: vendor.location,
+            description: vendor.description, listed_by: vendor.listedBy, photo_url: photoUrl
+          }).select("id").single();
+          if (error) throw new Error(error.message);
+          if (vendor.reviews.length) {
+            const { error: reviewError } = await db.from("reviews").insert(
+              vendor.reviews.map(review => ({
+                vendor_id: inserted.id, reviewer_name: review.reviewerName,
+                stars: review.stars, comment: review.comment
+              }))
+            );
+            if (reviewError) throw new Error(reviewError.message);
+          }
+        }
+        await refresh(); showToast("Board imported to the cloud 🎪");
       }
 
       async function sharePage() {
@@ -404,10 +509,46 @@
       dialog.addEventListener("click",event => { if (event.target === dialog) closeDialog(); });
 
       (async () => {
-        const saved = await readBoard();
-        state.vendors = Array.isArray(saved) ? sanitizeImportedBoard(saved) : cloneSeed();
-        if (!saved) await writeBoard();
+        if (!libraryLoaded) {
+          setStatus("bad","SCRIPT BLOCKED","The Supabase library could not load. Check the connection, or an ad blocker blocking cdn.jsdelivr.net.");
+          grid.innerHTML = `<div class="empty-state"><span>🚧</span><h3>A required script did not load</h3><p>The page could not reach cdn.jsdelivr.net. Reload, or try turning off any ad blocker for this site.</p></div>`;
+          renderTicker();
+          return;
+        }
+
+        if (!configured) {
+          let problem;
+          if (!configFileLoaded) problem = "config.js is missing, or is not in the same folder as index.html. Add it to your repo alongside this file.";
+          else if (usingSecretKey) problem = "That is a SECRET key — remove it from config.js immediately and rotate it in Supabase. Use the publishable (or legacy anon) key instead.";
+          else if (!urlLooksRight && !keyLooksRight) problem = "Both values in config.js still need filling in.";
+          else if (!urlLooksRight) problem = "The Project URL in config.js looks wrong. It should look like https://abcdefghijkl.supabase.co — no trailing path.";
+          else problem = "The key in config.js looks wrong. It should start with sb_publishable_ or with eyJ. Find it under Settings → API Keys.";
+          setStatus("bad","SETUP NEEDED",problem);
+          grid.innerHTML = `<div class="empty-state"><span>🔌</span><h3>Not connected yet</h3><p>${escapeHtml(problem)}</p></div>`;
+          renderTicker();
+          return;
+        }
+
+        try {
+          await loadBoard();
+          setStatus("good","LIVE","Shared board — everyone sees the same listings and ratings, on any device.");
+        } catch (error) {
+          console.error(error);
+          setStatus("bad","OFFLINE",`Could not reach the board: ${error.message || "check your Supabase URL and key."}`);
+          grid.innerHTML = `<div class="empty-state"><span>📡</span><h3>Could not load the board</h3><p>${escapeHtml(error.message || "Check your internet connection and your Supabase settings.")}</p></div>`;
+          renderTicker();
+          return;
+        }
         renderBoard();
+
+        // Live updates: when anyone anywhere adds a vendor or a rating, refresh this screen.
+        db.channel("board-changes")
+          .on("postgres_changes", { event: "INSERT", schema: "public", table: "reviews" }, refresh)
+          .on("postgres_changes", { event: "INSERT", schema: "public", table: "vendors" }, refresh)
+          .subscribe();
+
+        // Catch anything missed while the tab was in the background.
+        document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
       })();
     })();
   </script>

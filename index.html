@@ -228,6 +228,14 @@
         return db.storage.from(PHOTO_BUCKET).getPublicUrl(path).data.publicUrl;
       }
 
+      // "Added Aug 20" — keeps the card's second meta slot useful now that no name is shown.
+      function shortDate(value) {
+        const when = new Date(value);
+        return isNaN(when.getTime())
+          ? ""
+          : `Added ${when.toLocaleDateString("en-CA", { month: "short", day: "numeric" })}`;
+      }
+
       function average(vendor) {
         return vendor.reviews.length ? vendor.reviews.reduce((sum, review) => sum + review.stars, 0) / vendor.reviews.length : 0;
       }
@@ -281,7 +289,7 @@
               <span class="photo-note">${photo ? "CREW SNAP" : "ADD YOUR SNAP"}</span>
             </div>
             <div class="card-body">
-              <div class="card-meta"><span>${escapeHtml(vendor.category)}</span><span>Listed by ${escapeHtml(vendor.listedBy)}</span></div>
+              <div class="card-meta"><span>${escapeHtml(vendor.category)}</span><span>${escapeHtml(shortDate(vendor.createdAt))}</span></div>
               <h3>${escapeHtml(vendor.name)}</h3><p class="location">⌖ ${escapeHtml(vendor.location || "Location pending")}</p>
               <p class="vendor-description">${escapeHtml(vendor.description)}</p>
               <div class="rating-row"><strong>${score.toFixed(1)}</strong><div>${starsMarkup(score)}<small>${vendor.reviews.length} crew rating${vendor.reviews.length === 1 ? "" : "s"}</small></div></div>
@@ -367,16 +375,15 @@
       }
 
       function openAddDialog() {
-        const savedName = localStorage.getItem("cne-bites-name") || "";
         modalContent.innerHTML = `<button class="modal-close" type="button" data-close aria-label="Close">×</button><p class="eyebrow dark">NEW MIDWAY FIND</p><h2 id="new-vendor-title">List a vendor</h2><p>Snap it, name it, and give the crew your first take.</p>
           <form id="vendor-form">
             <div class="form-grid"><label>Vendor name<input required name="name" autofocus maxlength="90" placeholder="e.g. The Flaming Funnel Cake"></label><label>Food mood<select name="category">${categories.map(category => `<option>${category}</option>`).join("")}</select></label></div>
             <label>Where did you find it?<input name="location" maxlength="120" placeholder="Food Building, midway, landmark…"></label>
             <label>What’s the deal?<textarea name="description" maxlength="600" placeholder="Tell the crew what they serve and what makes it worth finding."></textarea></label>
-            <div class="modal-note"><b>Quick reminder:</b> the board is public, so photos of the food and the stall work best — no people in the shot, and a first name or nickname is plenty.</div>
+            <div class="modal-note"><b>Quick reminder:</b> the board is public and listings are anonymous, so photos of the food and the stall work best — no people in the shot, please.</div>
             <label class="upload-control"><span class="upload-icon" id="upload-preview">📸</span><span><b id="upload-title">Add a vendor photo</b><small>JPG, PNG or WEBP · up to 8 MB · food and stalls</small></span><input type="file" name="photo" accept="image/jpeg,image/png,image/webp"></label>
             <div class="divider-label"><span>YOUR FIRST RATING</span></div>
-            <div class="form-grid"><label>Your name<input required name="listedBy" maxlength="40" value="${escapeHtml(savedName)}" placeholder="First name or nickname"></label><label>Your stars${starPickerMarkup("stars",5)}</label></div>
+            <label>Your stars${starPickerMarkup("stars",5)}</label>
             <label>Your hot take<textarea name="comment" maxlength="500" placeholder="Worth the lineup? Too messy? Secretly incredible?"></textarea></label>
             <button class="primary-button full" type="submit">List this vendor →</button>
           </form>`;
@@ -398,7 +405,6 @@
           submit.disabled = true; submit.textContent = "Adding to the board…";
           try {
             const data = new FormData(form);
-            const listedBy = String(data.get("listedBy") || "").trim();
 
             submit.textContent = photoInput.files[0] ? "Uploading photo…" : "Adding to the board…";
             const photoUrl = await uploadPhoto(await fileToPhoto(photoInput.files[0]));
@@ -409,20 +415,19 @@
               category: String(data.get("category") || "Midway find"),
               location: String(data.get("location") || "").trim(),
               description: String(data.get("description") || "").trim(),
-              listed_by: listedBy,
+              listed_by: "Crew",             // listings are anonymous — no name is collected
               photo_url: photoUrl
             }).select("id").single();
             if (vendorError) throw new Error(vendorError.message);
 
             const { error: reviewError } = await db.from("reviews").insert({
               vendor_id: inserted.id,
-              reviewer_name: listedBy,
+              reviewer_name: "Crew",
               stars: Number(data.get("stars")),
               comment: String(data.get("comment") || "").trim()
             });
             if (reviewError) throw new Error(reviewError.message);
 
-            localStorage.setItem("cne-bites-name",listedBy);
             await refresh(); closeDialog(); showToast("Vendor added — everyone can see it now! 🎉");
           } catch (error) {
             alert(error.message || "The vendor could not be saved.");
